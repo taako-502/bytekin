@@ -6,7 +6,6 @@ fn calculate_level(xp: u32) -> u32 {
     xp / 100 + 1
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
