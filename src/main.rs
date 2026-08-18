@@ -1,6 +1,57 @@
+struct Bytekin {
+    name: String,
+    xp: u32,
+}
+
+impl Bytekin {
+    fn new(name: &str) -> Bytekin {
+        Bytekin {
+            name: name.to_string(),
+            xp: 0,
+        }
+    }
+
+    fn level(&self) -> u32 {
+        calculate_level(self.xp)
+    }
+
+    fn train(&mut self) {
+        self.xp += 25;
+    }
+}
+
 fn main() {
     println!("Hello, Bytekin!");
     println!("Level for 0 XP: {}", calculate_level(0));
+
+    let mut bytekin = Bytekin::new("Mochi");
+
+    println!(
+        "{}: {} XP / Level {}",
+        bytekin.name,
+        bytekin.xp,
+        bytekin.level()
+    );
+
+    bytekin.train();
+
+    println!(
+        "{}: {} XP / Level {}",
+        bytekin.name,
+        bytekin.xp,
+        bytekin.level()
+    );
+
+    bytekin.train();
+    bytekin.train();
+    bytekin.train();
+
+    println!(
+        "{}: {} XP / Level {}",
+        bytekin.name,
+        bytekin.xp,
+        bytekin.level()
+    );
 }
 
 fn calculate_level(xp: u32) -> u32 {
