@@ -1,5 +1,6 @@
 fn main() {
     println!("Hello, Bytekin!");
+    println!("Level for 0 XP: {}", calculate_level(0));
 }
 
 fn calculate_level(xp: u32) -> u32 {
