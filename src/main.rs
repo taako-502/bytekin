@@ -24,23 +24,31 @@ impl Bytekin {
         calculate_level(self.xp)
     }
 
-    fn train(&mut self) {
+    fn train(&mut self) -> Result<(), String> {
+        if self.energy < 20 {
+            return Err(String::from("体力が足りません。休息してください。"));
+        }
         self.xp += 25;
         self.energy -= 20;
 
         if self.level() >= 2 && self.special_move.is_none() {
             self.special_move = Some(String::from("Byte Burst!!"));
         }
+
+        Ok(())
     }
 
     fn rest(&mut self) {
         self.energy += 20;
     }
 
-    fn act(&mut self, action: Action) {
+    fn act(&mut self, action: Action) -> Result<(), String> {
         match action {
             Action::Train => self.train(),
-            Action::Rest => self.rest(),
+            Action::Rest => {
+                self.rest();
+                Ok(())
+            }
         }
     }
 }
@@ -69,11 +77,22 @@ fn main() {
         bytekin.energy
     );
 
-    bytekin.act(Action::Train);
-    bytekin.act(Action::Rest);
-    bytekin.act(Action::Train);
-    bytekin.act(Action::Train);
-    bytekin.act(Action::Train);
+    let actions = [
+        Action::Train,
+        Action::Rest,
+        Action::Train,
+        Action::Train,
+        Action::Train,
+        Action::Train,
+        Action::Train,
+    ];
+
+    for action in actions {
+        match bytekin.act(action) {
+            Ok(_) => println!("Action performed successfully."),
+            Err(e) => println!("Error: {}", e),
+        }
+    }
 
     println!(
         "{}: {} XP / Level {} / Energy {}",
