@@ -3,6 +3,7 @@ struct Bytekin {
     xp: u32,
     energy: u32,
     special_move: Option<String>,
+    history: Vec<Action>,
 }
 
 enum Action {
@@ -17,6 +18,7 @@ impl Bytekin {
             xp: 0,
             energy: 100,
             special_move: None,
+            history: Vec::new(),
         }
     }
 
@@ -25,6 +27,7 @@ impl Bytekin {
     }
 
     fn train(&mut self) -> Result<(), String> {
+        self.history.push(Action::Train);
         if self.energy < 20 {
             return Err(String::from("体力が足りません。休息してください。"));
         }
@@ -39,6 +42,7 @@ impl Bytekin {
     }
 
     fn rest(&mut self) {
+        self.history.push(Action::Rest);
         self.energy += 20;
     }
 
@@ -67,17 +71,8 @@ fn main() {
         bytekin.energy
     );
 
-    bytekin.train();
-
-    println!(
-        "{}: {} XP / Level {} / Energy {}",
-        bytekin.name,
-        bytekin.xp,
-        bytekin.level(),
-        bytekin.energy
-    );
-
     let actions = [
+        Action::Train,
         Action::Train,
         Action::Rest,
         Action::Train,
@@ -105,6 +100,14 @@ fn main() {
     match &bytekin.special_move {
         Some(move_name) => println!("Special Move: {}", move_name),
         None => println!("Special Move: Not learned"),
+    }
+
+    for (i, action) in bytekin.history.iter().enumerate() {
+        let action_str = match action {
+            Action::Train => "Train",
+            Action::Rest => "Rest",
+        };
+        println!("Action {}: {}", i + 1, action_str);
     }
 }
 
