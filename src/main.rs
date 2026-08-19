@@ -4,6 +4,11 @@ struct Bytekin {
     energy: u32,
 }
 
+enum Action {
+    Train,
+    Rest,
+}
+
 impl Bytekin {
     fn new(name: &str) -> Bytekin {
         Bytekin {
@@ -20,6 +25,17 @@ impl Bytekin {
     fn train(&mut self) {
         self.xp += 25;
         self.energy -= 20;
+    }
+
+    fn rest(&mut self) {
+        self.energy += 20;
+    }
+
+    fn act(&mut self, action: Action) {
+        match action {
+            Action::Train => self.train(),
+            Action::Rest => self.rest(),
+        }
     }
 }
 
