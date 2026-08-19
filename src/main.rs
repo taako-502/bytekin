@@ -1,6 +1,6 @@
 use std::io::{self, Write};
 
-struct Nibbyte {
+struct Bitflora {
     name: String,
     xp: u32,
     energy: u32,
@@ -13,9 +13,9 @@ enum Action {
     Rest,
 }
 
-impl Nibbyte {
-    fn new(name: &str) -> Nibbyte {
-        Nibbyte {
+impl Bitflora {
+    fn new(name: &str) -> Bitflora {
+        Bitflora {
             name: name.to_string(),
             xp: 0,
             energy: 100,
@@ -61,12 +61,12 @@ impl Nibbyte {
 }
 
 fn main() {
-    println!("Hello, Nibbyte!");
-    let mut nibbyte = Nibbyte::new("Mochi");
+    println!("Hello, Bitflora!");
+    let mut bitflora = Bitflora::new("Mochi");
 
     loop {
         println!();
-        show_status(&nibbyte);
+        show_status(&bitflora);
         println!("\n行動を選んでください");
         println!("1: Train");
         println!("2: Rest");
@@ -86,11 +86,11 @@ fn main() {
         }
 
         match input.trim() {
-            "1" => perform_action(&mut nibbyte, Action::Train),
-            "2" => perform_action(&mut nibbyte, Action::Rest),
-            "3" => show_history(&nibbyte),
+            "1" => perform_action(&mut bitflora, Action::Train),
+            "2" => perform_action(&mut bitflora, Action::Rest),
+            "3" => show_history(&bitflora),
             "0" => {
-                println!("またね、{}！", nibbyte.name);
+                println!("またね、{}！", bitflora.name);
                 break;
             }
             _ => println!("0から3の数字を入力してください。"),
@@ -98,35 +98,35 @@ fn main() {
     }
 }
 
-fn perform_action(nibbyte: &mut Nibbyte, action: Action) {
-    match nibbyte.act(action) {
+fn perform_action(bitflora: &mut Bitflora, action: Action) {
+    match bitflora.act(action) {
         Ok(()) => println!("行動に成功しました。"),
         Err(message) => println!("行動に失敗しました: {}", message),
     }
 }
 
-fn show_status(nibbyte: &Nibbyte) {
+fn show_status(bitflora: &Bitflora) {
     println!(
         "{}: {} XP / Level {} / Energy {}",
-        nibbyte.name,
-        nibbyte.xp,
-        nibbyte.level(),
-        nibbyte.energy
+        bitflora.name,
+        bitflora.xp,
+        bitflora.level(),
+        bitflora.energy
     );
 
-    match &nibbyte.special_move {
+    match &bitflora.special_move {
         Some(move_name) => println!("Special Move: {}", move_name),
         None => println!("Special Move: Not learned"),
     }
 }
 
-fn show_history(nibbyte: &Nibbyte) {
-    if nibbyte.history.is_empty() {
+fn show_history(bitflora: &Bitflora) {
+    if bitflora.history.is_empty() {
         println!("行動履歴はまだありません。");
         return;
     }
 
-    for (i, action) in nibbyte.history.iter().enumerate() {
+    for (i, action) in bitflora.history.iter().enumerate() {
         let action_str = match action {
             Action::Train => "Train",
             Action::Rest => "Rest",
@@ -158,9 +158,9 @@ mod tests {
     }
 
     #[test]
-    fn new_nibbyte_starts_with_name_and_zero_xp() {
-        let nibbyte = Nibbyte::new("Mochi");
-        assert_eq!(nibbyte.name, "Mochi");
-        assert_eq!(nibbyte.xp, 0);
+    fn new_bitflora_starts_with_name_and_zero_xp() {
+        let bitflora = Bitflora::new("Mochi");
+        assert_eq!(bitflora.name, "Mochi");
+        assert_eq!(bitflora.xp, 0);
     }
 }
