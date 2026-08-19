@@ -1,5 +1,20 @@
 use std::io::{self, Write};
 
+const BITFLORA_ART: &str = r#"          .-.
+       .-(   )-.
+      (___.-.___)
+          \|/
+       .-""""-.
+      /  o  o  \
+     |     ^     |
+     |   \___/   |
+      \  .:::.  /
+       `-.___.-'
+         /| |\
+        /_| |_\
+          / \
+         /___\"#;
+
 struct Bitflora {
     name: String,
     xp: u32,
@@ -62,6 +77,7 @@ impl Bitflora {
 
 fn main() {
     println!("Hello, Bitflora!");
+    println!("{}", BITFLORA_ART);
     let name = match read_name() {
         Ok(name) => name,
         Err(error) => {
