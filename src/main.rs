@@ -75,4 +75,11 @@ mod tests {
         assert_eq!(calculate_level(199), 2);
         assert_eq!(calculate_level(200), 3);
     }
+
+    #[test]
+    fn new_bytekin_starts_with_name_and_zero_xp() {
+        let bytekin = Bytekin::new("Mochi");
+        assert_eq!(bytekin.name, "Mochi");
+        assert_eq!(bytekin.xp, 0);
+    }
 }
