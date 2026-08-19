@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 struct Bytekin {
     name: String,
     xp: u32,
@@ -27,12 +29,13 @@ impl Bytekin {
     }
 
     fn train(&mut self) -> Result<(), String> {
-        self.history.push(Action::Train);
         if self.energy < 20 {
             return Err(String::from("体力が足りません。休息してください。"));
         }
+
         self.xp += 25;
         self.energy -= 20;
+        self.history.push(Action::Train);
 
         if self.level() >= 2 && self.special_move.is_none() {
             self.special_move = Some(String::from("Byte Burst!!"));
@@ -43,7 +46,7 @@ impl Bytekin {
 
     fn rest(&mut self) {
         self.history.push(Action::Rest);
-        self.energy += 20;
+        self.energy = (self.energy + 20).min(100);
     }
 
     fn act(&mut self, action: Action) -> Result<(), String> {
@@ -59,36 +62,50 @@ impl Bytekin {
 
 fn main() {
     println!("Hello, Bytekin!");
-    println!("Level for 0 XP: {}", calculate_level(0));
-
     let mut bytekin = Bytekin::new("Mochi");
 
-    println!(
-        "{}: {} XP / Level {} / Energy {}",
-        bytekin.name,
-        bytekin.xp,
-        bytekin.level(),
-        bytekin.energy
-    );
+    loop {
+        println!();
+        show_status(&bytekin);
+        println!("\n行動を選んでください");
+        println!("1: Train");
+        println!("2: Rest");
+        println!("3: History");
+        println!("0: Quit");
+        print!("> ");
 
-    let actions = [
-        Action::Train,
-        Action::Train,
-        Action::Rest,
-        Action::Train,
-        Action::Train,
-        Action::Train,
-        Action::Train,
-        Action::Train,
-    ];
+        if let Err(error) = io::stdout().flush() {
+            eprintln!("画面への出力に失敗しました: {}", error);
+            break;
+        }
 
-    for action in actions {
-        match bytekin.act(action) {
-            Ok(_) => println!("Action performed successfully."),
-            Err(e) => println!("Error: {}", e),
+        let mut input = String::new();
+        if let Err(error) = io::stdin().read_line(&mut input) {
+            eprintln!("入力の読み取りに失敗しました: {}", error);
+            break;
+        }
+
+        match input.trim() {
+            "1" => perform_action(&mut bytekin, Action::Train),
+            "2" => perform_action(&mut bytekin, Action::Rest),
+            "3" => show_history(&bytekin),
+            "0" => {
+                println!("またね、{}！", bytekin.name);
+                break;
+            }
+            _ => println!("0から3の数字を入力してください。"),
         }
     }
+}
 
+fn perform_action(bytekin: &mut Bytekin, action: Action) {
+    match bytekin.act(action) {
+        Ok(()) => println!("行動に成功しました。"),
+        Err(message) => println!("行動に失敗しました: {}", message),
+    }
+}
+
+fn show_status(bytekin: &Bytekin) {
     println!(
         "{}: {} XP / Level {} / Energy {}",
         bytekin.name,
@@ -100,6 +117,13 @@ fn main() {
     match &bytekin.special_move {
         Some(move_name) => println!("Special Move: {}", move_name),
         None => println!("Special Move: Not learned"),
+    }
+}
+
+fn show_history(bytekin: &Bytekin) {
+    if bytekin.history.is_empty() {
+        println!("行動履歴はまだありません。");
+        return;
     }
 
     for (i, action) in bytekin.history.iter().enumerate() {
