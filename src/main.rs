@@ -1,6 +1,7 @@
 struct Bytekin {
     name: String,
     xp: u32,
+    energy: u32,
 }
 
 impl Bytekin {
@@ -8,6 +9,7 @@ impl Bytekin {
         Bytekin {
             name: name.to_string(),
             xp: 0,
+            energy: 100,
         }
     }
 
@@ -17,6 +19,7 @@ impl Bytekin {
 
     fn train(&mut self) {
         self.xp += 25;
+        self.energy -= 20;
     }
 }
 
@@ -27,19 +30,21 @@ fn main() {
     let mut bytekin = Bytekin::new("Mochi");
 
     println!(
-        "{}: {} XP / Level {}",
+        "{}: {} XP / Level {} / Energy {}",
         bytekin.name,
         bytekin.xp,
-        bytekin.level()
+        bytekin.level(),
+        bytekin.energy
     );
 
     bytekin.train();
 
     println!(
-        "{}: {} XP / Level {}",
+        "{}: {} XP / Level {} / Energy {}",
         bytekin.name,
         bytekin.xp,
-        bytekin.level()
+        bytekin.level(),
+        bytekin.energy
     );
 
     bytekin.train();
@@ -47,10 +52,11 @@ fn main() {
     bytekin.train();
 
     println!(
-        "{}: {} XP / Level {}",
+        "{}: {} XP / Level {} / Energy {}",
         bytekin.name,
         bytekin.xp,
-        bytekin.level()
+        bytekin.level(),
+        bytekin.energy
     );
 }
 
