@@ -1,6 +1,6 @@
 use std::io::{self, Write};
 
-struct Bytekin {
+struct Bitflora {
     name: String,
     xp: u32,
     energy: u32,
@@ -13,9 +13,9 @@ enum Action {
     Rest,
 }
 
-impl Bytekin {
-    fn new(name: &str) -> Bytekin {
-        Bytekin {
+impl Bitflora {
+    fn new(name: &str) -> Bitflora {
+        Bitflora {
             name: name.to_string(),
             xp: 0,
             energy: 100,
@@ -61,12 +61,12 @@ impl Bytekin {
 }
 
 fn main() {
-    println!("Hello, Bytekin!");
-    let mut bytekin = Bytekin::new("Mochi");
+    println!("Hello, Bitflora!");
+    let mut bitflora = Bitflora::new("Mochi");
 
     loop {
         println!();
-        show_status(&bytekin);
+        show_status(&bitflora);
         println!("\n行動を選んでください");
         println!("1: Train");
         println!("2: Rest");
@@ -86,11 +86,11 @@ fn main() {
         }
 
         match input.trim() {
-            "1" => perform_action(&mut bytekin, Action::Train),
-            "2" => perform_action(&mut bytekin, Action::Rest),
-            "3" => show_history(&bytekin),
+            "1" => perform_action(&mut bitflora, Action::Train),
+            "2" => perform_action(&mut bitflora, Action::Rest),
+            "3" => show_history(&bitflora),
             "0" => {
-                println!("またね、{}！", bytekin.name);
+                println!("またね、{}！", bitflora.name);
                 break;
             }
             _ => println!("0から3の数字を入力してください。"),
@@ -98,35 +98,35 @@ fn main() {
     }
 }
 
-fn perform_action(bytekin: &mut Bytekin, action: Action) {
-    match bytekin.act(action) {
+fn perform_action(bitflora: &mut Bitflora, action: Action) {
+    match bitflora.act(action) {
         Ok(()) => println!("行動に成功しました。"),
         Err(message) => println!("行動に失敗しました: {}", message),
     }
 }
 
-fn show_status(bytekin: &Bytekin) {
+fn show_status(bitflora: &Bitflora) {
     println!(
         "{}: {} XP / Level {} / Energy {}",
-        bytekin.name,
-        bytekin.xp,
-        bytekin.level(),
-        bytekin.energy
+        bitflora.name,
+        bitflora.xp,
+        bitflora.level(),
+        bitflora.energy
     );
 
-    match &bytekin.special_move {
+    match &bitflora.special_move {
         Some(move_name) => println!("Special Move: {}", move_name),
         None => println!("Special Move: Not learned"),
     }
 }
 
-fn show_history(bytekin: &Bytekin) {
-    if bytekin.history.is_empty() {
+fn show_history(bitflora: &Bitflora) {
+    if bitflora.history.is_empty() {
         println!("行動履歴はまだありません。");
         return;
     }
 
-    for (i, action) in bytekin.history.iter().enumerate() {
+    for (i, action) in bitflora.history.iter().enumerate() {
         let action_str = match action {
             Action::Train => "Train",
             Action::Rest => "Rest",
@@ -158,9 +158,9 @@ mod tests {
     }
 
     #[test]
-    fn new_bytekin_starts_with_name_and_zero_xp() {
-        let bytekin = Bytekin::new("Mochi");
-        assert_eq!(bytekin.name, "Mochi");
-        assert_eq!(bytekin.xp, 0);
+    fn new_bitflora_starts_with_name_and_zero_xp() {
+        let bitflora = Bitflora::new("Mochi");
+        assert_eq!(bitflora.name, "Mochi");
+        assert_eq!(bitflora.xp, 0);
     }
 }
