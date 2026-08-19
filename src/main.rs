@@ -2,6 +2,7 @@ struct Bytekin {
     name: String,
     xp: u32,
     energy: u32,
+    special_move: Option<String>,
 }
 
 enum Action {
@@ -15,6 +16,7 @@ impl Bytekin {
             name: name.to_string(),
             xp: 0,
             energy: 100,
+            special_move: None,
         }
     }
 
@@ -25,6 +27,10 @@ impl Bytekin {
     fn train(&mut self) {
         self.xp += 25;
         self.energy -= 20;
+
+        if self.level() >= 2 && self.special_move.is_none() {
+            self.special_move = Some(String::from("Byte Burst!!"));
+        }
     }
 
     fn rest(&mut self) {
@@ -63,9 +69,11 @@ fn main() {
         bytekin.energy
     );
 
-    bytekin.train();
-    bytekin.train();
-    bytekin.train();
+    bytekin.act(Action::Train);
+    bytekin.act(Action::Rest);
+    bytekin.act(Action::Train);
+    bytekin.act(Action::Train);
+    bytekin.act(Action::Train);
 
     println!(
         "{}: {} XP / Level {} / Energy {}",
@@ -74,6 +82,11 @@ fn main() {
         bytekin.level(),
         bytekin.energy
     );
+
+    match &bytekin.special_move {
+        Some(move_name) => println!("Special Move: {}", move_name),
+        None => println!("Special Move: Not learned"),
+    }
 }
 
 fn calculate_level(xp: u32) -> u32 {
