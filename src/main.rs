@@ -62,7 +62,15 @@ impl Bitflora {
 
 fn main() {
     println!("Hello, Bitflora!");
-    let mut bitflora = Bitflora::new("Mochi");
+    let name = match read_name() {
+        Ok(name) => name,
+        Err(error) => {
+            eprintln!("名前の読み取りに失敗しました: {}", error);
+            return;
+        }
+    };
+    let mut bitflora = Bitflora::new(&name);
+    println!("{}が誕生しました！", bitflora.name);
 
     loop {
         println!();
@@ -96,6 +104,22 @@ fn main() {
             _ => println!("0から3の数字を入力してください。"),
         }
     }
+}
+
+fn read_name() -> io::Result<String> {
+    print!("名前を入力してください（未入力ならMochi）: ");
+    io::stdout().flush()?;
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+
+    Ok(name_or_default(&input).to_string())
+}
+
+fn name_or_default(input: &str) -> &str {
+    let name = input.trim();
+
+    if name.is_empty() { "Mochi" } else { name }
 }
 
 fn perform_action(bitflora: &mut Bitflora, action: Action) {
@@ -162,5 +186,16 @@ mod tests {
         let bitflora = Bitflora::new("Mochi");
         assert_eq!(bitflora.name, "Mochi");
         assert_eq!(bitflora.xp, 0);
+    }
+
+    #[test]
+    fn uses_default_name_when_input_is_empty() {
+        assert_eq!(name_or_default("\n"), "Mochi");
+        assert_eq!(name_or_default("   \n"), "Mochi");
+    }
+
+    #[test]
+    fn trims_the_entered_name() {
+        assert_eq!(name_or_default("  Flora  \n"), "Flora");
     }
 }
